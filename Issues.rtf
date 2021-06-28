@@ -1,0 +1,55 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2580
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 Menlo-Regular;\f1\fnil\fcharset0 Menlo-Bold;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red50\green244\blue241;\red235\green239\blue24;
+\red251\green30\blue255;\red99\green226\blue255;}
+{\*\expandedcolortbl;;\csgray\c0;\cssrgb\c19571\c95778\c95688;\cssrgb\c93803\c93590\c10850;
+\cssrgb\c100000\c29678\c100000;\cssrgb\c44518\c90662\c100000;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww26040\viewh13740\viewkind0
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs34 \cf2 \CocoaLigature0 To be fixed:\
+\
+1. Instrumentation of additional JVM is not working\
+\
+[mwadmin@jboss deployagent]$ ./deployAgent.sh instrument -ja\
+\
+16:33:51 - Java Agent dir /JavaAgent not found.\
+[mwadmin@jboss deployagent]$ \
+\
+\
+2. For JBoss standalone deployment, AppD parameters adding at the end of standalone.sh file, hence params are getting ignored when restarted Jboss.\
+\
+\
+If params moved to below location, params are working (line number around 330)\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 # Display our environment\cf2 \
+\cf4 echo\cf5  \cf4 "\cf5 =========================================================================\cf4 "\cf2 \
+\cf4 echo\cf5  \cf4 ""\cf2 \
+\cf4 echo\cf5  \cf4 "\cf5   JBoss Bootstrap Environment\cf4 "\cf2 \
+\cf4 echo\cf5  \cf4 ""\cf2 \
+\cf4 echo\cf5  \cf4 "\cf5   JBOSS_HOME: \cf6 $JBOSS_HOME\cf4 "\cf2 \
+\cf4 echo\cf5  \cf4 ""\cf2 \
+\cf4 echo\cf5  \cf4 "\cf5   JAVA: \cf6 $JAVA\cf4 "\cf2 \
+\cf4 echo\cf5  \cf4 ""\cf2 \
+\cf4 echo\cf5  \cf4 "\cf5   JAVA_OPTS: \cf6 $JAVA_OPTS\cf4 "\cf2 \
+\cf4 echo\cf5  \cf4 ""\cf2 \
+\cf4 echo\cf5  \cf4 "\cf5 =========================================================================\cf4 "\cf2 \
+\cf4 echo\cf5  \cf4 ""\cf2 \
+\
+\cf3 # appDynamics Java Agent parameters\cf2 \
+
+\f1\b \cf3 JAVA_OPTS
+\f0\b0 \cf2 =\cf4 "\cf6 $JAVA_OPTS\cf5  -javaagent:/home/mwadmin/appdynamics/JavaAgent/javaagent.jar -Dappdynamics.agent.applicationName=SAMPLE_JAVA_APPLICATION -Dappdynamics.agent.tierName=Sample_App -Dappdynamics.agent.nodeName=Sample_App_PRVLJBSAPPS01\cf4 "\cf2 \
+\
+\
+\cf4 while true; do\cf2 \
+   \cf4 if [\cf2  \cf4 "\cf5 x\cf6 $LAUNCH_JBOSS_IN_BACKGROUND\cf4 "\cf2  \cf4 =\cf2  \cf5 "x"\cf2  \cf4 ]\cf2 ; \cf4 then\cf2 \
+\
+\
+\
+3. Machine agent upgrade not working in Windows. (Screenshot)\
+\
+\
+\
+}
