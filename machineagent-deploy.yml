@@ -1,0 +1,69 @@
+- name: Deploy AppDynamics Machine Agent
+  hosts: appd-servers
+  user: chandu
+  become: yes
+  become_user: appduser
+  gather_facts: false
+
+###### Update below before execution ######
+  vars:
+    remote_install_path: /appd/machineagent
+    ma_agent_binary: machineagent-bundle-64bit-linux-21.7.0.3160.zip
+    ma_agent_source_path: .
+    ma_agent_config_file: appd_saas_uat.xml
+
+###### DO NOT MODIFY BELOW UNLESS YOU KNOW WHAT YOU ARE DOING #####
+  tasks:
+  - name: Check if "/appd" directory exist or not ?
+    ansible.builtin.stat:
+      path: /appd
+    register: appd_path
+
+  - name: Cleanup/Remove existing Machine Agent directory
+    ansible.builtin.file:
+      path: '{{ remote_install_path }}'
+      state: absent
+    
+  - name: Create Machine Agent directory
+    ansible.builtin.file:
+      path: '{{ remote_install_path }}'
+      state: directory
+      owner: appduser
+      group: appduser
+      mode: '0775'
+
+  - name: Copy Machine Agent package 
+    ansible.builtin.copy:
+      src: '{{ ma_agent_source_path }}/{{ ma_agent_binary }}'
+      dest: /tmp
+      owner: appduser
+      group: appduser
+      mode: '0775'
+      force: yes   # Default: Remote file will be replaced when contents are different than the source.
+
+  - name: Extract Machine Agent ZIP file
+    ansible.builtin.unarchive:
+      src: '/tmp/{{ ma_agent_binary }}'
+      dest: '{{ remote_install_path }}'
+      remote_src: yes
+      owner: appduser
+      group: appduser
+      mode: '0775'
+
+  - name: Copy Machine Agent config file "controller-info.xml"
+    ansible.builtin.copy:
+      src: '{{ ma_agent_config_file }}'
+      dest: '{{ remote_install_path }}/conf/controller-info.xml'
+      owner: appduser
+      group: appduser
+      mode: '0775'
+      force: yes
+
+  - name: Copy Machine Agent startup script file "start_agent.sh"
+    ansible.builtin.copy:
+      src: start_agent.sh
+      dest: '{{ remote_install_path }}/start_agent.sh'
+      owner: appduser
+      group: appduser
+      mode: '0775'
+      force: yes
